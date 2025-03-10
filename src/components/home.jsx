@@ -12,7 +12,7 @@ const Home = () => {
 				maxSize={3}
 				speed={2}
 				particleColor="#ffffff"
-				particleDensity={40}
+				particleDensity={35}
 			/>
 			<div className="relative z-10 flex gap-5">
 				<div className="relative">

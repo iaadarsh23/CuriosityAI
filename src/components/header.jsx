@@ -13,7 +13,7 @@ const Header = () => {
 				maxSize={3}
 				speed={2}
 				particleColor="#27ffc1"
-				particleDensity={40}
+				particleDensity={35}
 			/>
 			<div className="flex items-center justify-between px-16">
 				{/* Logo */}
