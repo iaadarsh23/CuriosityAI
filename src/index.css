@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 body {
 	min-height: 100vh;
-	background: linear-gradient(135deg, #2e2e2e, #000000);
+	background: linear-gradient(135deg, #000000, #000000);
 	/* display: flex;
 	align-items: center;
 	justify-content: center; */
@@ -124,10 +124,10 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+	* {
+		@apply border-border outline-ring/50;
 	}
-  body {
-    @apply bg-background text-foreground;
+	body {
+		@apply bg-background text-foreground;
 	}
 }
