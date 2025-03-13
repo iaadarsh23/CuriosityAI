@@ -1,10 +1,11 @@
 import React from "react";
 import { SparklesCore } from "./ui/sparkles";
 import Button from "./button";
+import ChatBot from "./chatBot";
 
-const Home = () => {
+const Home = ({ openChatBot }) => {
 	return (
-		<div className="min-h-screen flex flex-col justify-center items-center text-center gap-6 bg-black">
+		<div className="min-h-screen flex flex-col justify-center items-center text-center gap-6 bg-black z-10">
 			<SparklesCore
 				className="absolute inset-0 z-0"
 				background="transparent"
@@ -35,7 +36,8 @@ const Home = () => {
 					Chat with Curiosity
 				</p>
 			</div>
-			<Button children={"Start Exploring"} />
+
+			<Button onClick={openChatBot}>Start Exploring</Button>
 		</div>
 	);
 };

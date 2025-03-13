@@ -37,7 +37,9 @@ const Header = () => {
 				</nav>
 
 				{/* Sign Up Button */}
-				<Button href="login">Login</Button>
+				<Button href="login" onClick={() => console.log("hello")}>
+					Login
+				</Button>
 			</div>
 		</div>
 	);
