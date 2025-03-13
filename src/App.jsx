@@ -15,8 +15,9 @@ function App() {
 	return (
 		<>
 			<Header />
+			//agr showhome true hai toh home page dikha dega
 			{showHome && <Home openChatBot={renderChat} />}
-
+			//agr openBot true hai toh chatbot dikha dega
 			{openBot && <ChatBot />}
 		</>
 	);
