@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "./button";
 import { SparklesCore } from "./ui/sparkles";
 ("use client");
-
+import { generateContentFromGemini } from "../data/handleApi";
 import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
 
 export function ChatBot() {
@@ -34,13 +34,44 @@ export function ChatBot() {
 		"Help me structure my thesis proposal",
 	];
 
+	//handling the users message
+	const [messages, setMessages] = useState([
+		{ role: "bot", content: "how can i assist you" },
+	]);
+
+	const sendMessage = async (userInput) => {
+		try {
+			if (!userInput.trim()) return;
+
+			setMessages((prev) => [...prev, { role: "user", content: userInput }]);
+
+			const botReply = await generateContentFromGemini(userInput);
+
+			setMessages((prev) => [...prev, { role: "bot", content: botReply }]);
+		} catch (error) {
+			console.error("Error sending message:", error);
+			setMessages((prev) => [
+				...prev,
+				{
+					role: "bot",
+					content: "Sorry, I encountered an error. Please try again.",
+				},
+			]);
+		}
+	};
+
 	const handleChange = (e) => {
 		console.log(e.target.value);
 	};
 	const onSubmit = (e) => {
 		e.preventDefault();
-		console.log(e);
+		const inputElement = e.target.querySelector("input");
+		if (inputElement && inputElement.value.trim()) {
+			sendMessage(inputElement.value);
+			inputElement.value = ""; // Clear input after sending
+		}
 	};
+
 	return (
 		<div className="relative w-full h-screen">
 			{/* Background Sparkles Layer */}
@@ -73,6 +104,16 @@ export function ChatBot() {
 						onSubmit={onSubmit}
 					/>
 				</div>
+			</div>
+
+			{/* output window  */}
+			{/* Chat Window */}
+			<div className="text-center space-y-4">
+				{messages.map((message, index) => (
+					<p key={index}>
+						{message.role}: {message.content}
+					</p>
+				))}
 			</div>
 		</div>
 	);
