@@ -2,6 +2,7 @@ import { use, useState } from "react";
 import ChatBot from "./components/chatBot";
 import Header from "./components/header";
 import Home from "./components/home";
+import FeaturesSection from "./components/features";
 
 function App() {
 	const [openBot, setOpenBot] = useState(false);
@@ -15,10 +16,11 @@ function App() {
 	return (
 		<>
 			<Header />
-			//agr showhome true hai toh home page dikha dega
+			{/* //agr showhome true hai toh home page dikha dega */}
 			{showHome && <Home openChatBot={renderChat} />}
-			//agr openBot true hai toh chatbot dikha dega
+			{/* //agr openBot true hai toh chatbot dikha dega */}
 			{openBot && <ChatBot />}
+			<FeaturesSection />
 		</>
 	);
 }
