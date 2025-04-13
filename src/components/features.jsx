@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Brain, Sparkles, Shield, Network, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "./lib/utils";
+import Button from "./button";
 
 const FeatureCard = ({ title, description, children, className }) => {
 	const [isHovered, setIsHovered] = useState(false);
@@ -23,14 +24,14 @@ const FeatureCard = ({ title, description, children, className }) => {
 		>
 			{/* Glow effect */}
 			<div
-				className={`absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`}
+				className={`absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`}
 			></div>
 			<div
-				className={`absolute -inset-1 bg-gradient-to-br from-cyan-500/20 via-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700 pointer-events-none`}
+				className={`absolute -inset-2 bg-gradient-to-br from-cyan-500/30 via-transparent to-purple-500/30 opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none`}
 			></div>
 
 			{/* Border glow on hover */}
-			<div className="absolute inset-0 rounded-xl border border-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+			<div className="absolute inset-0 rounded-xl border border-cyan-500/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
 			<div className="relative z-10">
 				<h3 className="text-xl font-bold mb-3 flex items-center gap-2">
@@ -40,7 +41,7 @@ const FeatureCard = ({ title, description, children, className }) => {
 				<p className="text-gray-400 mb-6">{description}</p>
 				<div
 					className={`bg-black/50 p-6 rounded-lg h-64 flex items-center justify-center transition-all duration-300 ${
-						isHovered ? "shadow-[0_0_15px_rgba(34,211,238,0.15)]" : ""
+						isHovered ? "shadow-[0_0_25px_rgba(34,211,238,0.25)]" : ""
 					}`}
 				>
 					{children}
@@ -409,24 +410,7 @@ export default function FeaturesSection() {
 					whileInView={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.7, delay: 0.5 }}
 					viewport={{ once: true }}
-				>
-					<a
-						href="#"
-						className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-medium hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-shadow duration-300 group"
-					>
-						Start Exploring
-						<motion.span
-							animate={{ x: [0, 5, 0] }}
-							transition={{
-								duration: 1.5,
-								repeat: Number.POSITIVE_INFINITY,
-								repeatType: "reverse",
-							}}
-						>
-							<ExternalLink className="w-4 h-4" />
-						</motion.span>
-					</a>
-				</motion.div>
+				></motion.div>
 			</section>
 		</div>
 	);

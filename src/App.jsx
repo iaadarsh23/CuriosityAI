@@ -1,4 +1,5 @@
 import { use, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import ChatBot from "./components/chatBot";
 import Header from "./components/header";
 import Home from "./components/home";
@@ -14,14 +15,16 @@ function App() {
 	}
 
 	return (
-		<>
-			<Header />
-			{/* //agr showhome true hai toh home page dikha dega */}
-			{showHome && <Home openChatBot={renderChat} />}
-			{/* //agr openBot true hai toh chatbot dikha dega */}
-			{openBot && <ChatBot />}
-			<FeaturesSection />
-		</>
+		<BrowserRouter>
+			<>
+				<Header />
+				{/* //agr showhome true hai toh home page dikha dega */}
+				{showHome && <Home openChatBot={renderChat} />}
+				{/* //agr openBot true hai toh chatbot dikha dega */}
+				{openBot && <ChatBot />}
+				<FeaturesSection />
+			</>
+		</BrowserRouter>
 	);
 }
 

@@ -1,9 +1,11 @@
 import React from "react";
+import { ContainerTextFlip } from "./ui/container-text-flip";
 import { SparklesCore } from "./ui/sparkles";
 import Button from "./button";
 import ChatBot from "./chatBot";
 
 const Home = ({ openChatBot }) => {
+	const words = ["awesome", "curious", "magical", "powerful", "intelligent"];
 	return (
 		<div className="min-h-screen flex flex-col justify-center items-center text-center gap-6 bg-black z-10">
 			<SparklesCore
@@ -13,8 +15,11 @@ const Home = ({ openChatBot }) => {
 				maxSize={3}
 				speed={2}
 				particleColor="#ffffff"
-				particleDensity={35}
+				particleDensity={40}
 			/>
+
+			{/* Moving the line with text flip + "Chat with Curiosity" here */}
+
 			<div className="relative z-10 flex gap-5">
 				<div className="relative">
 					<h1 className="text-7xl transition-colors duration-300 ease-in-out font-bold text-gray-500 hover:text-white">
@@ -29,12 +34,11 @@ const Home = ({ openChatBot }) => {
 					<div className="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent  via-sky-400 to-transparent animate-shimmer"></div>
 				</div>
 			</div>
-
-			<div className="relative z-10 flex gap-3">
-				<p className="text-2xl font-semibold text-white">Be Curious</p>
-				<p className="text-2xl font-semibold text-gray-500 transition-colors duration-300 ease-in-out hover:text-white">
+			<div className="relative z-10 flex items-center gap-3 text-2xl font-semibold text-white">
+				<ContainerTextFlip words={words} size="small" />
+				<span className="text-gray-500 transition-colors duration-300 ease-in-out hover:text-white">
 					Chat with Curiosity
-				</p>
+				</span>
 			</div>
 
 			<Button onClick={openChatBot}>Start Exploring</Button>

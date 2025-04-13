@@ -1,47 +1,81 @@
-import React from "react";
-import { navData } from "../data/navData";
-import { SparklesCore } from "./ui/sparkles";
-import Button from "./button";
+"use client";
+import React, { useState } from "react";
+import {
+	Navbar,
+	NavBody,
+	NavItems,
+	MobileNav,
+	MobileNavHeader,
+	MobileNavMenu,
+	MobileNavToggle,
+	NavbarLogo,
+	NavbarButton,
+} from "./ui/resizable-navbar";
 
 const Header = () => {
+	const [isOpen, setIsOpen] = useState(false);
+
+	const navItems = [
+		{
+			name: "Home",
+			link: "/",
+		},
+		{
+			name: "About",
+			link: "/about",
+		},
+		{
+			name: "Features",
+			link: "/features",
+		},
+		{
+			name: "Contact",
+			link: "/contact",
+		},
+	];
+
 	return (
-		<div className="fixed top-0 left-0 w-full z-50 bg-black py-4">
-			<SparklesCore
-				className="absolute inset-0 -z-12"
-				background="transparent"
-				minSize={1}
-				maxSize={3}
-				speed={2}
-				particleColor="#27ffc1"
-				particleDensity={35}
-			/>
-			<div className="flex items-center justify-between px-16">
-				{/* Logo */}
-				<div>
-					<a className="text-2xl font-bold text-white" href="#hero">
-						Curiosity AI
-					</a>
-				</div>
-
-				{/* Navigation */}
-				<nav className="flex gap-20">
-					{navData.map((data) => (
-						<a
-							key={data.id}
-							href={data.path}
-							className="text-gray-400 hover:text-white transition duration-300 uppercase text-sm tracking-wider"
-						>
-							{data.title}
-						</a>
-					))}
-				</nav>
-
-				{/* Sign Up Button */}
-				<Button href="login" onClick={() => console.log("hello")}>
+		<Navbar>
+			{/* Desktop Navigation */}
+			<NavBody>
+				<NavbarLogo />
+				<NavItems items={navItems} />
+				<NavbarButton
+					onClick={() => {}}
+					className="bg-gradient-to-r from-blue-500 to-purple-500"
+				>
 					Login
-				</Button>
-			</div>
-		</div>
+				</NavbarButton>
+			</NavBody>
+
+			{/* Mobile Navigation */}
+			<MobileNav>
+				<MobileNavHeader>
+					<NavbarLogo />
+					<MobileNavToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
+				</MobileNavHeader>
+				<MobileNavMenu isOpen={isOpen}>
+					{navItems.map((item, index) => (
+						<NavbarButton
+							key={index}
+							href={item.link}
+							variant="secondary"
+							className="w-full"
+							onClick={() => setIsOpen(false)}
+						>
+							{item.name}
+						</NavbarButton>
+					))}
+					<NavbarButton
+						href="/get-started"
+						variant="gradient"
+						className="w-full"
+					>
+						Get Started
+					</NavbarButton>
+				</MobileNavMenu>
+			</MobileNav>
+		</Navbar>
 	);
 };
 
