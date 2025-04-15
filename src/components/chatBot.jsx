@@ -5,6 +5,7 @@ import { SparklesCore } from "./ui/sparkles";
 ("use client");
 import { generateContentFromGemini } from "../data/handleApi";
 import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
+import { ContainerTextFlip } from "./ui/container-text-flip";
 
 export function ChatBot() {
 	function getTime() {
@@ -72,6 +73,8 @@ export function ChatBot() {
 		}
 	};
 
+	const greetingWords = ["Hello", "Hi", "Hey", "Greetings"];
+
 	return (
 		<div className="relative w-full h-screen">
 			{/* Background Sparkles Layer */}
@@ -89,9 +92,12 @@ export function ChatBot() {
 			{/* Content Layer */}
 			<div className="relative z-10 h-full flex flex-col justify-center items-center px-4">
 				<div className="text-center space-y-4">
-					<h2 className="text-xl sm:text-5xl dark:text-white text-gray-400 font-mono font-light tracking-wider transform  transition-colors 0 hover:text-amber-50">
-						Good {currentTime}, Adarsh
-					</h2>
+					<div className="flex items-center gap-2">
+						<ContainerTextFlip words={greetingWords} size="small" />
+						<h2 className="text-xl sm:text-5xl dark:text-white text-gray-400 font-mono font-light tracking-wider transform transition-colors hover:text-amber-50">
+							Good {currentTime}, Adarsh
+						</h2>
+					</div>
 					<p className="text-lg sm:text-3xl dark:text-white/80 text-gray-500 font-mono">
 						How may I help you today?
 					</p>

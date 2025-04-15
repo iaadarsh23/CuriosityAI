@@ -1,9 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+console.log("All env vars:", import.meta.env);
 const apiKey = import.meta.env.VITE_APP_GEMINI_API_KEY?.trim();
-console.log("API Key length:", apiKey?.length); // Debug log
+console.log("API Key:", apiKey);
+console.log("API Key length:", apiKey?.length);
 
 if (!apiKey) {
+	console.error("Environment variables:", import.meta.env);
 	throw new Error(
 		"VITE_APP_GEMINI_API_KEY is not defined in environment variables"
 	);
