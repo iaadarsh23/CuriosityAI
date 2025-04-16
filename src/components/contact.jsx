@@ -1,137 +1,104 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { FiMail, FiGithub, FiLinkedin, FiTwitter } from "react-icons/fi";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { SparklesCore } from "./ui/sparkles";
+import { CardDemo } from "./ui/feature-card";
 
 const Contact = () => {
+	const socialLinks = [
+		{
+			icon: FaGithub,
+			url: "https://github.com/iaadarsh23",
+			label: "GitHub",
+		},
+		{
+			icon: FaLinkedin,
+			url: "https://www.linkedin.com/in/adarsh-tripathi-529199260/",
+			label: "LinkedIn",
+		},
+		{
+			icon: FaTwitter,
+			url: "https://x.com/adarshtrip2306",
+			label: "Twitter",
+		},
+	];
+
 	return (
-		<div className="min-h-screen bg-black relative">
-			<SparklesCore
-				className="absolute inset-0 z-0"
-				background="transparent"
-				minSize={1}
-				maxSize={3}
-				speed={2}
-				particleColor="#ffffff"
-				particleDensity={40}
-			/>
-			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.8 }}
-					className="text-center mb-16"
-				>
-					<h2 className="text-5xl font-bold text-white mb-4">Get in Touch</h2>
-					<p className="text-xl text-gray-400 max-w-3xl mx-auto">
-						Have questions or feedback? We'd love to hear from you. Connect with
-						us through any of these channels.
-					</p>
-				</motion.div>
+		<div className="min-h-screen bg-black relative overflow-hidden">
+			{/* SparklesCore Background */}
+			<div className="absolute inset-0 h-full w-full">
+				<SparklesCore
+					id="tsparticlesfullpage"
+					background="transparent"
+					minSize={0.6}
+					maxSize={1.4}
+					particleDensity={100}
+					className="w-full h-full"
+					particleColor="#FFFFFF"
+				/>
+			</div>
 
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-					<motion.div
-						initial={{ opacity: 0, x: -20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.8, delay: 0.2 }}
-						className="bg-black/40 backdrop-blur-md p-8 rounded-2xl border border-white/10"
-					>
-						<h3 className="text-2xl font-bold text-white mb-6">Contact Form</h3>
-						<form className="space-y-4">
-							<div>
-								<label
-									htmlFor="name"
-									className="block text-sm font-medium text-gray-300"
-								>
-									Name
-								</label>
-								<input
-									type="text"
-									id="name"
-									className="mt-1 block w-full rounded-md bg-black/60 border-white/10 text-white focus:border-sky-500 focus:ring-sky-500"
-								/>
-							</div>
-							<div>
-								<label
-									htmlFor="email"
-									className="block text-sm font-medium text-gray-300"
-								>
-									Email
-								</label>
-								<input
-									type="email"
-									id="email"
-									className="mt-1 block w-full rounded-md bg-black/60 border-white/10 text-white focus:border-sky-500 focus:ring-sky-500"
-								/>
-							</div>
-							<div>
-								<label
-									htmlFor="message"
-									className="block text-sm font-medium text-gray-300"
-								>
-									Message
-								</label>
-								<textarea
-									id="message"
-									rows={4}
-									className="mt-1 block w-full rounded-md bg-black/60 border-white/10 text-white focus:border-sky-500 focus:ring-sky-500"
-								/>
-							</div>
-							<button
-								type="submit"
-								className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-2 px-4 rounded-md transition duration-200 hover:opacity-90"
-							>
-								Send Message
-							</button>
-						</form>
-					</motion.div>
+			<div className="relative z-10 py-20">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					{/* Futuristic Heading */}
+					<div className="text-center mb-20">
+						<h1 className="text-5xl md:text-7xl font-bold mb-6 premium-text">
+							Know About Me
+						</h1>
+						<style jsx>{`
+							@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
-					<motion.div
-						initial={{ opacity: 0, x: 20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.8, delay: 0.4 }}
-						className="bg-black/40 backdrop-blur-md p-8 rounded-2xl border border-white/10"
-					>
-						<h3 className="text-2xl font-bold text-white mb-6">
-							Connect With Us
-						</h3>
-						<div className="space-y-6">
-							<a
-								href="mailto:contact@curiosityai.com"
-								className="flex items-center space-x-3 text-gray-400 hover:text-sky-400 transition-colors"
-							>
-								<FiMail className="h-6 w-6" />
-								<span>contact@curiosityai.com</span>
-							</a>
-							<a
-								href="https://github.com/curiosityai"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center space-x-3 text-gray-400 hover:text-sky-400 transition-colors"
-							>
-								<FiGithub className="h-6 w-6" />
-								<span>GitHub</span>
-							</a>
-							<a
-								href="https://linkedin.com/company/curiosityai"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center space-x-3 text-gray-400 hover:text-sky-400 transition-colors"
-							>
-								<FiLinkedin className="h-6 w-6" />
-								<span>LinkedIn</span>
-							</a>
-							<a
-								href="https://twitter.com/curiosityai"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="flex items-center space-x-3 text-gray-400 hover:text-sky-400 transition-colors"
-							>
-								<FiTwitter className="h-6 w-6" />
-								<span>Twitter</span>
-							</a>
+							.premium-text {
+								font-family: "Montserrat", sans-serif;
+								background: linear-gradient(90deg, #c0c0c0, #f5f5f5, #a9a9a9);
+								background-size: 200% auto;
+								-webkit-background-clip: text;
+								-webkit-text-fill-color: transparent;
+								text-shadow: 0 0 15px rgba(245, 245, 245, 0.3),
+									0 0 25px rgba(192, 192, 192, 0.2);
+								animation: shine 8s linear infinite;
+								letter-spacing: 0.05em;
+							}
+
+							@keyframes shine {
+								to {
+									background-position: 200% center;
+								}
+							}
+						`}</style>
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+						{/* Left side - Feature Card */}
+						<div className="w-full max-w-lg mx-auto">
+							<CardDemo />
 						</div>
-					</motion.div>
+
+						{/* Right side - Contact Info */}
+						<div className="text-center md:text-left">
+							<h2 className="text-5xl font-bold mb-6 premium-text">
+								Adarsh Tripathi
+							</h2>
+							<p className="text-xl text-gray-300 mb-8 font-light">
+								Let's connect and create something amazing together.
+							</p>
+							<div className="flex flex-wrap gap-6 justify-center md:justify-start">
+								{socialLinks.map((link, index) => (
+									<a
+										key={index}
+										href={link.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="group flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
+									>
+										<span className="bg-black/30 p-4 rounded-full backdrop-blur-sm border border-white/10 group-hover:border-white/20 group-hover:bg-black/40 transition-all">
+											<link.icon className="w-6 h-6" />
+										</span>
+										<span className="font-medium">{link.label}</span>
+									</a>
+								))}
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
