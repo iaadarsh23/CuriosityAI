@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
 	Navbar,
 	NavBody,
@@ -38,41 +39,42 @@ const Header = () => {
 		<Navbar>
 			{/* Desktop Navigation */}
 			<NavBody>
-				<NavbarLogo />
+				<Link to="/">
+					<NavbarLogo />
+				</Link>
 				<NavItems items={navItems} />
-				<NavbarButton
-					onClick={() => {}}
-					className="bg-gradient-to-r from-blue-500 to-purple-500"
-				>
-					Login
-				</NavbarButton>
+				<Link to="/login">
+					<NavbarButton className="bg-gradient-to-r from-blue-500 to-purple-500">
+						Login
+					</NavbarButton>
+				</Link>
 			</NavBody>
 
 			{/* Mobile Navigation */}
 			<MobileNav>
 				<MobileNavHeader>
-					<NavbarLogo />
+					<Link to="/">
+						<NavbarLogo />
+					</Link>
 					<MobileNavToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
 				</MobileNavHeader>
 				<MobileNavMenu isOpen={isOpen}>
 					{navItems.map((item, index) => (
-						<NavbarButton
-							key={index}
-							href={item.link}
-							variant="secondary"
-							className="w-full"
-							onClick={() => setIsOpen(false)}
-						>
-							{item.name}
-						</NavbarButton>
+						<Link key={index} to={item.link}>
+							<NavbarButton
+								variant="secondary"
+								className="w-full"
+								onClick={() => setIsOpen(false)}
+							>
+								{item.name}
+							</NavbarButton>
+						</Link>
 					))}
-					<NavbarButton
-						href="/get-started"
-						variant="gradient"
-						className="w-full"
-					>
-						Get Started
-					</NavbarButton>
+					<Link to="/get-started">
+						<NavbarButton variant="gradient" className="w-full">
+							Get Started
+						</NavbarButton>
+					</Link>
 				</MobileNavMenu>
 			</MobileNav>
 		</Navbar>

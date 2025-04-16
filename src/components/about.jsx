@@ -1,86 +1,202 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FiCode, FiMessageSquare, FiZap, FiShield } from "react-icons/fi";
-import { ContainerTextFlip } from "./ui/container-text-flip";
+import { FiZap, FiCpu, FiCode } from "react-icons/fi";
+import { BackgroundGradientAnimation } from "./ui/background-gradient-animation";
+import { SparklesCore } from "./ui/sparkles";
+import GoogleGemini from "../assets/images/Google-Gemini-Pro.webp";
+import Neural from "../assets/images/neural.jpg";
+import Future from "../assets/images/2.jpeg";
 
 const About = () => {
-	const aboutWords = ["mission", "vision", "values", "purpose"];
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: {
+				staggerChildren: 0.4,
+			},
+		},
+	};
+
+	const cardVariants = {
+		hidden: (index) => ({
+			opacity: 0,
+			x: index % 2 === 0 ? -200 : 200,
+			scale: 0.8,
+		}),
+		visible: {
+			opacity: 1,
+			x: 0,
+			scale: 1,
+			transition: {
+				type: "spring",
+				damping: 20,
+				stiffness: 100,
+				duration: 0.8,
+			},
+		},
+	};
+
+	const imageVariants = {
+		hidden: (index) => ({
+			opacity: 0,
+			x: index % 2 === 0 ? -100 : 100,
+			rotateY: index % 2 === 0 ? -15 : 15,
+		}),
+		visible: {
+			opacity: 1,
+			x: 0,
+			rotateY: 0,
+			transition: {
+				type: "spring",
+				damping: 25,
+				stiffness: 80,
+				delay: 0.2,
+			},
+		},
+	};
+
+	const cards = [
+		{
+			title: "Powered by Gemini Pro",
+			description:
+				"Experience the power of Google's most advanced AI model. Our platform leverages Gemini Pro's capabilities to provide intelligent, context-aware responses and insights.",
+			image: GoogleGemini,
+			icon: FiZap,
+			iconText: "Advanced AI Capabilities",
+		},
+		{
+			title: "Neural Network Architecture",
+			description:
+				"Built on sophisticated neural networks that learn and adapt, providing you with increasingly accurate and personalized responses over time.",
+			image: Neural,
+			icon: FiCpu,
+			iconText: "Deep Learning Technology",
+		},
+		{
+			title: "Future of AI Interaction",
+			description:
+				"Join us in shaping the future of human-AI interaction. Our platform continuously evolves to bring you the most advanced AI capabilities.",
+			image: Future,
+			icon: FiCode,
+			iconText: "Innovative Solutions",
+		},
+	];
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
-			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.8 }}
-					className="text-center mb-16"
-				>
-					<div className="flex items-center justify-center gap-2 mb-4">
-						<ContainerTextFlip words={aboutWords} size="small" />
-						<h2 className="text-4xl font-bold text-gray-900 dark:text-white">
-							About Us
-						</h2>
-					</div>
-					<p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-						Curiosity AI is your intelligent companion for exploring the world
-						of artificial intelligence. We combine cutting-edge technology with
-						user-friendly interfaces to make AI accessible to everyone.
-					</p>
-				</motion.div>
+		<div className="min-h-screen bg-black relative overflow-hidden">
+			{/* SparklesCore Background */}
+			<div className="absolute inset-0 h-full w-full">
+				<SparklesCore
+					id="tsparticlesfullpage"
+					background="transparent"
+					minSize={0.6}
+					maxSize={1.4}
+					particleDensity={100}
+					className="w-full h-full"
+					particleColor="#FFFFFF"
+				/>
+			</div>
 
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+			<div className="relative z-10 py-20">
+				<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 					<motion.div
-						initial={{ opacity: 0, y: 20 }}
+						initial={{ opacity: 0, y: -50 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, delay: 0.2 }}
-						className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
+						transition={{ duration: 1, ease: "easeOut" }}
+						className="text-center mb-20"
 					>
-						<div className="text-primary-600 dark:text-primary-400 mb-4">
-							<FiCode className="h-6 w-6" />
-						</div>
-						<h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-							Our Mission
-						</h3>
-						<p className="text-gray-600 dark:text-gray-300">
-							To democratize AI technology and make it accessible to everyone,
-							regardless of their technical background.
+						<h1 className="text-6xl font-bold mb-6 tracking-tight font-sans bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 bg-clip-text text-transparent drop-shadow-sm">
+							Where AI Meets Human Creativity
+						</h1>
+						<p className="text-2xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
+							Imagine having a brilliant companion who understands you, learns
+							from you, and helps bring your ideas to life. That's us – your
+							creative partner in the AI revolution.
 						</p>
 					</motion.div>
 
 					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, delay: 0.4 }}
-						className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
+						variants={containerVariants}
+						initial="hidden"
+						whileInView="visible"
+						viewport={{ once: true, margin: "-100px" }}
+						className="relative overflow-hidden rounded-3xl"
 					>
-						<div className="text-primary-600 dark:text-primary-400 mb-4">
-							<FiMessageSquare className="h-6 w-6" />
-						</div>
-						<h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-							Our Vision
-						</h3>
-						<p className="text-gray-600 dark:text-gray-300">
-							To create a world where AI enhances human potential and fosters
-							innovation in every field.
-						</p>
-					</motion.div>
+						<div className="relative h-full w-full overflow-hidden rounded-3xl">
+							<BackgroundGradientAnimation
+								gradientBackgroundStart="rgb(89, 0, 255)"
+								gradientBackgroundEnd="rgb(0, 0, 20)"
+								firstColor="89, 0, 255"
+								secondColor="255, 0, 255"
+								thirdColor="56, 189, 248"
+								fourthColor="103, 0, 255"
+								fifthColor="225, 56, 248"
+								pointerColor="140, 100, 255"
+								size="100%"
+								blendingValue="hard-light"
+								containerClassName="!h-full !w-full !absolute inset-0"
+							/>
+							<div className="relative z-10 p-12">
+								{cards.map((card, index) => (
+									<motion.div
+										key={index}
+										custom={index}
+										variants={cardVariants}
+										className={`flex flex-col ${
+											index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+										} items-center gap-12 ${
+											index !== cards.length - 1 ? "mb-24" : ""
+										}`}
+									>
+										{/* Image Section */}
+										<div className="w-full md:w-1/2">
+											<motion.div
+												className="relative group"
+												variants={imageVariants}
+												custom={index}
+												whileHover={{
+													scale: 1.02,
+													transition: { duration: 0.2 },
+												}}
+											>
+												<div className="absolute inset-0 bg-gradient-to-r from-violet-600/30 via-fuchsia-500/30 to-cyan-400/30 rounded-xl blur-xl transition-all duration-300 group-hover:blur-2xl" />
+												<img
+													src={card.image}
+													alt={card.title}
+													className="relative z-10 w-full h-72 object-cover rounded-xl border border-white/20 transition-all duration-300 group-hover:scale-[1.02] group-hover:border-white/30 shadow-lg"
+												/>
+											</motion.div>
+										</div>
 
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8, delay: 0.6 }}
-						className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg"
-					>
-						<div className="text-primary-600 dark:text-primary-400 mb-4">
-							<FiShield className="h-6 w-6" />
+										{/* Content Section */}
+										<motion.div
+											className="w-full md:w-1/2 text-center md:text-left"
+											initial={{ opacity: 0, y: 20 }}
+											whileInView={{ opacity: 1, y: 0 }}
+											transition={{ duration: 0.5, delay: 0.3 }}
+										>
+											<h3 className="text-4xl font-bold mb-6 text-white tracking-tight">
+												{card.title}
+											</h3>
+											<p className="text-lg text-gray-300 mb-6 leading-relaxed">
+												{card.description}
+											</p>
+											<motion.div
+												className="flex items-center justify-center md:justify-start space-x-3 text-cyan-300"
+												whileHover={{ scale: 1.05 }}
+												transition={{ duration: 0.2 }}
+											>
+												<card.icon className="w-6 h-6" />
+												<span className="text-lg font-medium">
+													{card.iconText}
+												</span>
+											</motion.div>
+										</motion.div>
+									</motion.div>
+								))}
+							</div>
 						</div>
-						<h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-							Our Values
-						</h3>
-						<p className="text-gray-600 dark:text-gray-300">
-							We believe in transparency, accessibility, and continuous
-							innovation to serve our users better.
-						</p>
 					</motion.div>
 				</div>
 			</div>

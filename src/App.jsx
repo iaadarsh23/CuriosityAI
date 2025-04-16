@@ -10,29 +10,37 @@ import { ThemeProvider } from "./context/ThemeContext";
 
 function App() {
 	const [openBot, setOpenBot] = useState(false);
-	const [showHome, setClose] = useState(true);
 
 	function renderChat() {
 		setOpenBot(true);
-		setClose(false);
 	}
 
 	return (
 		<BrowserRouter>
 			<ThemeProvider>
-				<>
+				<div className="min-h-screen bg-black">
 					<Header />
-					<Routes>
-						<Route
-							path="/"
-							element={showHome && <Home openChatBot={renderChat} />}
-						/>
-						<Route path="/chat" element={openBot && <ChatBot />} />
-						<Route path="/features" element={<FeaturesSection />} />
-						<Route path="/about" element={<About />} />
-						<Route path="/contact" element={<Contact />} />
-					</Routes>
-				</>
+					<main>
+						<Routes>
+							<Route
+								path="/"
+								element={
+									<>
+										<Home openChatBot={renderChat} />
+										<FeaturesSection />
+										<About />
+										<Contact />
+									</>
+								}
+							/>
+							<Route path="/chat" element={<ChatBot />} />
+							<Route path="/features" element={<FeaturesSection />} />
+							<Route path="/about" element={<About />} />
+							<Route path="/contact" element={<Contact />} />
+						</Routes>
+					</main>
+					{openBot && <ChatBot onClose={() => setOpenBot(false)} />}
+				</div>
 			</ThemeProvider>
 		</BrowserRouter>
 	);
