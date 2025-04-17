@@ -137,14 +137,18 @@ const Sparkles = () => {
 
 export const Card = ({ className, children }) => {
 	return (
-		<div
+		<motion.div
+			whileHover={{ scale: 1.02 }}
+			transition={{ type: "spring", stiffness: 300, damping: 20 }}
 			className={cn(
-				"max-w-sm w-full mx-auto p-8 rounded-xl border border-white/20 bg-black/20 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] group hover:border-white/40 transition-all duration-300",
+				"max-w-sm w-full mx-auto p-8 rounded-xl border border-white/20 bg-black/40 backdrop-blur-3xl shadow-[0_8px_32px_0_rgba(255,255,255,0.1)] group hover:border-white/40 transition-all duration-300 relative overflow-hidden",
 				className
 			)}
 		>
+			<div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/10 to-transparent pointer-events-none" />
+			<div className="absolute -inset-x-2 -inset-y-2 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
 			{children}
-		</div>
+		</motion.div>
 	);
 };
 
@@ -170,31 +174,39 @@ export const CardSkeletonContainer = ({
 	showGradient = true,
 }) => {
 	return (
-		<div
+		<motion.div
+			initial={{ opacity: 0, y: 20 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.8, ease: "easeOut" }}
 			className={cn(
-				"h-[15rem] md:h-[20rem] rounded-xl z-40 relative bg-black/20 backdrop-blur-sm border border-white/10",
+				"h-[15rem] md:h-[20rem] rounded-xl z-40 relative bg-black/30 backdrop-blur-xl border border-white/20 group-hover:border-white/30 transition-all duration-300",
 				className,
 				showGradient &&
-					"[mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)]"
+					"[mask-image:radial-gradient(60%_60%_at_50%_50%,white_0%,transparent_100%)]"
 			)}
 		>
+			<div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 			{children}
-		</div>
+		</motion.div>
 	);
 };
 
 export const Container = ({ className, children }) => {
 	return (
-		<div
+		<motion.div
+			whileHover={{ scale: 1.1 }}
+			whileTap={{ scale: 0.95 }}
+			transition={{ type: "spring", stiffness: 400, damping: 17 }}
 			className={cn(
-				`h-16 w-16 rounded-full flex items-center justify-center bg-black/20 backdrop-blur-sm border border-white/10
-	shadow-[0px_0px_8px_0px_rgba(248,248,248,0.25)_inset,0px_32px_24px_-16px_rgba(0,0,0,0.40)]
-	`,
+				`h-16 w-16 rounded-full flex items-center justify-center bg-black/30 backdrop-blur-xl border border-white/20
+				shadow-[0px_0px_12px_0px_rgba(248,248,248,0.3)_inset,0px_32px_24px_-16px_rgba(0,0,0,0.40)]
+				hover:border-white/40 hover:bg-black/40 transition-all duration-300
+				`,
 				className
 			)}
 		>
 			{children}
-		</div>
+		</motion.div>
 	);
 };
 

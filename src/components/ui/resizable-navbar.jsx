@@ -171,17 +171,11 @@ export const MobileNavToggle = ({ isOpen, onClick }) => {
 	);
 };
 
-export const NavbarLogo = ({ visible }) => {
+export const NavbarLogo = () => {
 	return (
-		<Link
-			to="/"
-			className={cn(
-				"relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300",
-				visible ? "text-gray-900" : "text-white"
-			)}
-		>
-			<span className="text-2xl font-bold">Curiosity AI</span>
-		</Link>
+		<div className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-200 hover:text-gray-900 dark:hover:text-gray-100">
+			<span className="text-xl font-bold text-white">Curiosity AI</span>
+		</div>
 	);
 };
 

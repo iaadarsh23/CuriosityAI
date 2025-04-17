@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import ChatBot from "./components/chatBot";
 import Header from "./components/header";
 import Home from "./components/home";
@@ -8,40 +8,67 @@ import About from "./components/about";
 import Contact from "./components/contact";
 import { ThemeProvider } from "./context/ThemeContext";
 
-function App() {
-	const [openBot, setOpenBot] = useState(false);
+function AppContent() {
+	const navigate = useNavigate();
+	const [isChatMode, setIsChatMode] = useState(false);
 
-	function renderChat() {
-		setOpenBot(true);
-	}
+	useEffect(() => {
+		// Update isChatMode based on current path
+		const path = window.location.pathname;
+		setIsChatMode(path === "/chat");
+	}, []);
+
+	const handleStartExploring = () => {
+		setIsChatMode(true);
+		navigate("/chat");
+	};
+
+	const handleExitChat = () => {
+		setIsChatMode(false);
+		navigate("/");
+	};
 
 	return (
+		<ThemeProvider>
+			<div className="min-h-screen bg-black">
+				{!isChatMode && (
+					<Header isChatMode={isChatMode} onExitChat={handleExitChat} />
+				)}
+				<main className={isChatMode ? "h-screen" : ""}>
+					<Routes>
+						<Route
+							path="/"
+							element={
+								<>
+									<Home openChatBot={handleStartExploring} />
+									<FeaturesSection />
+									<About />
+									<Contact />
+								</>
+							}
+						/>
+						<Route
+							path="/chat"
+							element={
+								<div className="h-screen">
+									<ChatBot onExit={handleExitChat} />
+								</div>
+							}
+						/>
+						<Route path="/features" element={<FeaturesSection />} />
+						<Route path="/about" element={<About />} />
+						<Route path="/contact" element={<Contact />} />
+					</Routes>
+				</main>
+			</div>
+		</ThemeProvider>
+	);
+}
+
+function App() {
+	return (
 		<BrowserRouter>
-			<ThemeProvider>
-				<div className="min-h-screen bg-black">
-					<Header />
-					<main>
-						<Routes>
-							<Route
-								path="/"
-								element={
-									<>
-										<Home openChatBot={renderChat} />
-										<FeaturesSection />
-										<About />
-										<Contact />
-									</>
-								}
-							/>
-							<Route path="/chat" element={<ChatBot />} />
-							<Route path="/features" element={<FeaturesSection />} />
-							<Route path="/about" element={<About />} />
-							<Route path="/contact" element={<Contact />} />
-						</Routes>
-					</main>
-					{openBot && <ChatBot onClose={() => setOpenBot(false)} />}
-				</div>
-			</ThemeProvider>
+			<AppContent />
 		</BrowserRouter>
 	);
 }

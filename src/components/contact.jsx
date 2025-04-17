@@ -23,17 +23,20 @@ const Contact = () => {
 	];
 
 	return (
-		<div className="min-h-screen bg-black relative overflow-hidden">
+		<div className="min-h-screen bg-transparent relative overflow-hidden">
 			{/* SparklesCore Background */}
-			<div className="absolute inset-0 h-full w-full">
+			<div className="absolute inset-0 w-full h-full">
 				<SparklesCore
 					id="tsparticlesfullpage"
-					background="transparent"
-					minSize={0.6}
-					maxSize={1.4}
-					particleDensity={100}
+					background="black"
+					minSize={1}
+					maxSize={2}
+					particleDensity={200}
 					className="w-full h-full"
 					particleColor="#FFFFFF"
+					speed={1}
+					particleCount={300}
+					animate={true}
 				/>
 			</div>
 

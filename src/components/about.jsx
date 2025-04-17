@@ -84,22 +84,25 @@ const About = () => {
 	];
 
 	return (
-		<div className="min-h-screen bg-black relative overflow-hidden">
-			{/* SparklesCore Background */}
-			<div className="absolute inset-0 h-full w-full">
+		<div className="min-h-screen bg-black/90 relative overflow-hidden">
+			{/* Main SparklesCore Background */}
+			<div className="fixed inset-0 h-screen w-full z-0">
 				<SparklesCore
 					id="tsparticlesfullpage"
 					background="transparent"
-					minSize={0.6}
-					maxSize={1.4}
-					particleDensity={100}
+					minSize={0.8}
+					maxSize={1.8}
+					particleDensity={150}
 					className="w-full h-full"
 					particleColor="#FFFFFF"
+					speed={0.5}
+					opacity={0.8}
 				/>
 			</div>
 
-			<div className="relative z-10 py-20">
-				<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+			{/* Content Container */}
+			<div className="relative z-10 min-h-screen">
+				<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
 					<motion.div
 						initial={{ opacity: 0, y: -50 }}
 						animate={{ opacity: 1, y: 0 }}
@@ -121,7 +124,7 @@ const About = () => {
 						initial="hidden"
 						whileInView="visible"
 						viewport={{ once: true, margin: "-100px" }}
-						className="relative overflow-hidden rounded-3xl"
+						className="relative overflow-hidden rounded-3xl bg-black/40 backdrop-blur-sm"
 					>
 						<div className="relative h-full w-full overflow-hidden rounded-3xl">
 							<BackgroundGradientAnimation

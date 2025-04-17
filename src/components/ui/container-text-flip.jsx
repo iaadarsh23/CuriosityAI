@@ -45,13 +45,11 @@ export function ContainerTextFlip({
 	};
 
 	return (
-		<motion.p
+		<motion.div
 			layout
 			layoutId={`words-here-${id}`}
-			animate={{ width }}
-			transition={{ duration: animationDuration / 2000 }}
 			className={cn(
-				"relative inline-block rounded-lg pt-2 pb-3 text-center font-bold text-black dark:text-white",
+				"relative inline-block rounded-lg px-6 py-4 text-center font-bold text-black dark:text-white",
 				sizeStyles[size] || sizeStyles.default,
 				"[background:linear-gradient(to_bottom,#f3f4f6,#e5e7eb)]",
 				"shadow-[inset_0_-1px_#d1d5db,inset_0_0_0_1px_#d1d5db,_0_4px_8px_#d1d5db]",
@@ -59,38 +57,17 @@ export function ContainerTextFlip({
 				"dark:shadow-[inset_0_-1px_#10171e,inset_0_0_0_1px_hsla(205,89%,46%,.24),_0_4px_8px_#00000052]",
 				className
 			)}
-			key={words[currentWordIndex]}
 		>
-			<motion.div
-				transition={{
-					duration: animationDuration / 1000,
-					ease: "easeInOut",
-				}}
-				className={cn("inline-block", textClassName)}
-				ref={textRef}
-				layoutId={`word-div-${words[currentWordIndex]}-${id}`}
+			<motion.span
+				key={currentWordIndex}
+				initial={{ y: 20, opacity: 0 }}
+				animate={{ y: 0, opacity: 1 }}
+				exit={{ y: -20, opacity: 0 }}
+				transition={{ duration: 0.3, ease: "easeInOut" }}
+				className="inline-block px-2"
 			>
-				<motion.div className="inline-block">
-					{words[currentWordIndex].split("").map((letter, index) => (
-						<motion.span
-							key={index}
-							initial={{
-								opacity: 0,
-								filter: "blur(10px)",
-							}}
-							animate={{
-								opacity: 1,
-								filter: "blur(0px)",
-							}}
-							transition={{
-								delay: index * 0.02,
-							}}
-						>
-							{letter}
-						</motion.span>
-					))}
-				</motion.div>
-			</motion.div>
-		</motion.p>
+				{words[currentWordIndex]}
+			</motion.span>
+		</motion.div>
 	);
 }
