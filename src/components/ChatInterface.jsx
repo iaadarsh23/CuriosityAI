@@ -5,6 +5,65 @@ import { IoArrowBack } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
 import { WavyBackground } from "./ui/wavy-background";
+import { generateContentFromGemini } from "../data/handleApi";
+
+const formatMessage = (text) => {
+	// Split into code blocks and regular text
+	const codeBlockRegex = /^(```[\w-]*\n[\s\S]*?\n```|```.+?```)/gm;
+	const parts = text.split(codeBlockRegex);
+
+	const formattedParts = parts.map((part, index) => {
+		if (part.startsWith("```")) {
+			// Extract code
+			const lines = part.split("\n");
+			const code = lines.slice(1, -1).join("\n");
+
+			return (
+				<pre
+					key={index}
+					className="w-full rounded-md bg-[#1a1a1a] p-4 my-2 overflow-x-auto"
+				>
+					<code className="text-sm font-mono text-white/90">{code}</code>
+				</pre>
+			);
+		}
+
+		// Format headers, bullet points, and other markdown
+		const formattedText = part
+			// Format headers
+			.replace(
+				/### (.*?)\n/g,
+				(_, header) =>
+					`<h3 class="text-xl font-semibold text-white/95 mt-6 mb-3">${header}</h3>\n`
+			)
+			// Format bullet points
+			.replace(
+				/• (.*?)(?:\n|$)/g,
+				(_, content) =>
+					`<div class="flex items-start space-x-2 my-1.5">
+					<span class="text-white/80 mt-1">•</span>
+					<span class="text-white/90">${content}</span>
+				</div>\n`
+			)
+			// Format bold text
+			.replace(
+				/\*\*(.*?)\*\*/g,
+				'<strong class="text-white font-semibold">$1</strong>'
+			)
+			// Format italic text
+			.replace(/_(.*?)_/g, '<em class="text-white/90 italic">$1</em>');
+
+		return (
+			<div
+				key={index}
+				className="space-y-2 text-white/85"
+				dangerouslySetInnerHTML={{ __html: formattedText }}
+			/>
+		);
+	});
+
+	return <>{formattedParts}</>;
+};
 
 const ChatMessage = ({ message, sender }) => {
 	const isUser = sender === "user";
@@ -26,7 +85,7 @@ const ChatMessage = ({ message, sender }) => {
 					textShadow: "0 1px 2px rgba(0,0,0,0.3)",
 				}}
 			>
-				{message.text}
+				{formatMessage(message.text)}
 			</div>
 		</Motion.div>
 	);
@@ -61,20 +120,8 @@ const ChatInterface = () => {
 		setIsLoading(true);
 
 		try {
-			const response = await fetch("/api/chat", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ message: inputValue }),
-			});
-
-			if (!response.ok) {
-				throw new Error("Failed to fetch response");
-			}
-
-			const data = await response.json();
-			const botMessage = { text: data.response, sender: "bot" };
+			const response = await generateContentFromGemini(inputValue);
+			const botMessage = { text: response, sender: "bot" };
 			setMessages((prev) => [...prev, botMessage]);
 		} catch (error) {
 			console.error("Error:", error);
