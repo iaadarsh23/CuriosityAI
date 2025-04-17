@@ -1,12 +1,10 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion as Motion } from "framer-motion";
 import { LampContainer } from "./ui/lamp-container";
 import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
-import { cn } from "@/lib/utils";
-import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { SparklesCore } from "./ui/sparkles";
+import { IoArrowBack } from "react-icons/io5";
 
 const placeholders = [
 	"Can you explain this React code and suggest improvements?",
@@ -38,112 +36,128 @@ function getTime() {
 const ChatBot = () => {
 	const navigate = useNavigate();
 	const currentTime = getTime();
-	const [messages, setMessages] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const messagesEndRef = useRef(null);
 	const [inputValue, setInputValue] = useState("");
 
-	const scrollToBottom = () => {
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-	};
-
-	useEffect(() => {
-		scrollToBottom();
-	}, [messages]);
-
-	const handleSubmit = async (e) => {
+	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (!inputValue.trim()) return;
 
-		const userMessage = { text: inputValue, sender: "user" };
-		setMessages((prev) => [...prev, userMessage]);
-		setInputValue("");
-		setIsLoading(true);
-
-		try {
-			const response = await fetch("/api/chat", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ message: inputValue }),
-			});
-
-			if (!response.ok) {
-				throw new Error("Failed to fetch response");
-			}
-
-			const data = await response.json();
-			const botMessage = { text: data.response, sender: "bot" };
-			setMessages((prev) => [...prev, botMessage]);
-		} catch (error) {
-			console.error("Error:", error);
-			const errorMessage = {
-				text: "Sorry, I encountered an error. Please try again.",
-				sender: "bot",
-			};
-			setMessages((prev) => [...prev, errorMessage]);
-		} finally {
-			setIsLoading(false);
-		}
+		// Navigate to chat interface with the initial message
+		navigate("/chat-interface", { state: { initialMessage: inputValue } });
 	};
 
 	return (
-		<div
-			className="fixed inset-0 w-screen h-screen bg-black isolate"
-			style={{ zIndex: 9999 }}
-		>
-			{/* Subtle Sparkles Background */}
-			<div className="fixed inset-0 w-full h-full">
-				<SparklesCore
-					id="tsparticlesfullpage"
-					background="transparent"
-					minSize={0.6}
-					maxSize={1.2}
-					particleDensity={30}
-					className="w-full h-full"
-					particleColor="#FFFFFF"
-					speed={0.3}
-					opacity={0.3}
-					particleCount={100}
-					animate={true}
-				/>
-			</div>
+		<div className="fixed inset-0 w-screen h-screen bg-black isolate">
+			{/* Back Button */}
+			<Motion.button
+				onClick={() => navigate(-1)}
+				initial={{ opacity: 0, x: 20 }}
+				animate={{ opacity: 1, x: 0 }}
+				whileHover={{ scale: 1.02 }}
+				className="fixed top-6 right-6 z-[9999] flex items-center gap-2 text-white/90 hover:text-white transition-colors"
+			>
+				<span className="text-sm font-medium">Return</span>
+				<IoArrowBack className="w-4 h-4" />
+			</Motion.button>
 
-			{/* Top Navigation Bar */}
-			<div className="absolute top-0 left-0 right-0 h-12 bg-black/40 backdrop-blur-sm border-b border-white/10 z-[9999] px-4 flex items-center">
-				<motion.button
-					onClick={() => navigate(-1)}
-					initial={{ opacity: 0, x: -20 }}
-					animate={{ opacity: 1, x: 0 }}
-					whileHover={{ scale: 1.02 }}
-					className="flex items-center gap-2 text-white/90 hover:text-white transition-colors"
-				>
-					<IoArrowBack className="w-4 h-4" />
-					<span className="text-sm font-medium">Return to Home</span>
-				</motion.button>
-			</div>
+			{/* Curiosity Logo */}
+			<Motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.8, delay: 0.3 }}
+				className="absolute top-6 left-8 z-[9999]"
+			>
+				<style jsx global>{`
+					@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap");
 
+					.premium-gradient {
+						background: linear-gradient(
+							to right,
+							#ffffff 0%,
+							#e0e0e0 20%,
+							#ffffff 40%,
+							#c0c0c0 60%,
+							#ffffff 80%,
+							#e0e0e0 100%
+						);
+						background-size: 200% auto;
+						-webkit-background-clip: text;
+						background-clip: text;
+						animation: shine 8s linear infinite;
+						text-shadow: 0 0 10px rgba(255, 255, 255, 0.1),
+							0 0 20px rgba(255, 255, 255, 0.1);
+					}
+
+					@keyframes shine {
+						to {
+							background-position: 200% center;
+						}
+					}
+
+					@keyframes rgbPulse {
+						0% {
+							background: #ff0000;
+							box-shadow: 0 0 8px #ff0000;
+						}
+						16.666% {
+							background: #ff00ff;
+							box-shadow: 0 0 8px #ff00ff;
+						}
+						33.333% {
+							background: #0000ff;
+							box-shadow: 0 0 8px #0000ff;
+						}
+						50% {
+							background: #00ffff;
+							box-shadow: 0 0 8px #00ffff;
+						}
+						66.666% {
+							background: #00ff00;
+							box-shadow: 0 0 8px #00ff00;
+						}
+						83.333% {
+							background: #ffff00;
+							box-shadow: 0 0 8px #ffff00;
+						}
+						100% {
+							background: #ff0000;
+							box-shadow: 0 0 8px #ff0000;
+						}
+					}
+
+					.rgb-dot {
+						animation: rgbPulse 6s linear infinite;
+						opacity: 0.9;
+					}
+				`}</style>
+				<div className="flex items-center gap-2">
+					<div
+						className="text-2xl premium-gradient text-transparent"
+						style={{ fontFamily: "'Cinzel', serif", fontWeight: 600 }}
+					>
+						Curiosity
+					</div>
+					<div className="w-1.5 h-1.5 rounded-full rgb-dot"></div>
+				</div>
+			</Motion.div>
+
+			{/* Lamp Container with beautiful light effect */}
 			<LampContainer className="fixed inset-0">
-				<motion.div
+				<Motion.div
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1, delay: 0.5 }}
 					className="flex flex-col items-center justify-center space-y-8 h-[35vh] mt-12"
 				>
-					<motion.h2
+					<Motion.h2
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{
-							duration: 1,
-							delay: 0.7,
-							ease: "easeOut",
-						}}
+						transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
 						className="text-4xl md:text-6xl lg:text-7xl text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 font-sans font-bold tracking-tight"
 					>
 						Good {currentTime}, Adarsh
-					</motion.h2>
-					<motion.p
+					</Motion.h2>
+					<Motion.p
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ duration: 1, delay: 1 }}
@@ -151,49 +165,20 @@ const ChatBot = () => {
 					>
 						Your AI companion awaits to illuminate your queries with wisdom and
 						wit.
-					</motion.p>
-				</motion.div>
+					</Motion.p>
+				</Motion.div>
 			</LampContainer>
 
+			{/* Input Section */}
 			<div className="fixed inset-0 flex flex-col items-center justify-start px-4 pt-[60vh]">
 				<div className="w-full max-w-4xl mx-auto">
 					<div className="w-full mb-12">
 						<PlaceholdersAndVanishInput
 							placeholders={placeholders}
+							value={inputValue}
 							onChange={(e) => setInputValue(e.target.value)}
 							onSubmit={handleSubmit}
 						/>
-					</div>
-
-					<div className="h-[40vh] overflow-y-auto space-y-4">
-						{messages.map((message, index) => (
-							<div
-								key={index}
-								className={cn(
-									"flex",
-									message.sender === "user" ? "justify-end" : "justify-start"
-								)}
-							>
-								<div
-									className={cn(
-										"max-w-[80%] rounded-lg p-4",
-										message.sender === "user"
-											? "bg-white text-black"
-											: "bg-black/10 text-white"
-									)}
-								>
-									{message.text}
-								</div>
-							</div>
-						))}
-						{isLoading && (
-							<div className="flex justify-start">
-								<div className="max-w-[80%] rounded-lg bg-black/10 p-4 text-white">
-									Thinking...
-								</div>
-							</div>
-						)}
-						<div ref={messagesEndRef} />
 					</div>
 				</div>
 			</div>

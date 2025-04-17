@@ -7,6 +7,7 @@ import FeaturesSection from "./components/features";
 import About from "./components/about";
 import Contact from "./components/contact";
 import { ThemeProvider } from "./context/ThemeContext";
+import ChatInterface from "./components/ChatInterface";
 
 function AppContent() {
 	const navigate = useNavigate();
@@ -15,7 +16,7 @@ function AppContent() {
 	useEffect(() => {
 		// Update isChatMode based on current path
 		const path = window.location.pathname;
-		setIsChatMode(path === "/chat");
+		setIsChatMode(path === "/chat" || path === "/chat-interface");
 	}, []);
 
 	const handleStartExploring = () => {
@@ -58,6 +59,14 @@ function AppContent() {
 						<Route path="/features" element={<FeaturesSection />} />
 						<Route path="/about" element={<About />} />
 						<Route path="/contact" element={<Contact />} />
+						<Route
+							path="/chat-interface"
+							element={
+								<div className="h-screen">
+									<ChatInterface />
+								</div>
+							}
+						/>
 					</Routes>
 				</main>
 			</div>
