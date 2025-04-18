@@ -1,5 +1,5 @@
 "use client";
-import React, { useId, useEffect, useState } from "react";
+import React, { useId, useEffect, useState, useCallback } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { motion, useAnimation } from "framer-motion";
@@ -10,14 +10,30 @@ export const SparklesCore = (props) => {
 		id,
 		className,
 		background,
-		minSize,
-		maxSize,
-		speed,
-		particleColor,
-		particleDensity,
+		minSize = 0.5,
+		maxSize = 3,
+		speed = 1,
+		particleColor = "#ffffff",
+		particleDensity = 35,
 	} = props;
 
 	const [init, setInit] = useState(false);
+	const controls = useAnimation();
+	const generatedId = useId();
+
+	const particlesLoaded = useCallback(
+		async (container) => {
+			if (container) {
+				await controls.start({
+					opacity: 1,
+					transition: {
+						duration: 1,
+					},
+				});
+			}
+		},
+		[controls]
+	);
 
 	useEffect(() => {
 		initParticlesEngine(async (engine) => {
@@ -27,82 +43,84 @@ export const SparklesCore = (props) => {
 		});
 	}, []);
 
-	const controls = useAnimation();
-
-	const particlesLoaded = async (container) => {
-		if (container) {
-			controls.start({
-				opacity: 1,
-				transition: {
-					duration: 1,
-				},
-			});
-		}
-	};
-
-	const generatedId = useId();
+	if (!init) return null;
 
 	return (
-		<motion.div animate={controls} className={cn("opacity-0", className)}>
-			{init && (
-				<Particles
-					id={id || generatedId}
-					className={cn("h-full w-full")}
-					particlesLoaded={particlesLoaded}
-					options={{
-						background: {
-							color: {
-								value: background || "#0d47a1",
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={controls}
+			className={cn("absolute inset-0 z-0", className)}
+		>
+			<Particles
+				id={id || generatedId}
+				particlesLoaded={particlesLoaded}
+				options={{
+					background: {
+						color: {
+							value: background || "transparent",
+						},
+					},
+					fpsLimit: 60,
+					interactivity: {
+						events: {
+							onClick: {
+								enable: false,
+							},
+							onHover: {
+								enable: false,
 							},
 						},
-						fullScreen: {
+						modes: {
+							push: {
+								quantity: 4,
+							},
+							repulse: {
+								distance: 200,
+								duration: 0.4,
+							},
+						},
+					},
+					particles: {
+						color: {
+							value: particleColor,
+						},
+						links: {
+							color: particleColor,
+							distance: 150,
 							enable: false,
-							zIndex: 1,
+							opacity: 0.5,
+							width: 1,
 						},
-						particles: {
-							color: {
-								value: particleColor || "#ffffff",
+						move: {
+							direction: "none",
+							enable: true,
+							outModes: {
+								default: "out",
 							},
-							move: {
+							random: false,
+							speed: speed,
+							straight: false,
+						},
+						number: {
+							density: {
 								enable: true,
-								speed: {
-									min: 0.1,
-									max: 1,
-								},
+								area: 800,
 							},
-							number: {
-								density: {
-									enable: true,
-									width: 400,
-									height: 400,
-								},
-								value: particleDensity || 120,
-							},
-							opacity: {
-								value: {
-									min: 0.1,
-									max: 1,
-								},
-								animation: {
-									enable: true,
-									speed: speed || 4,
-									sync: false,
-								},
-							},
-							size: {
-								value: {
-									min: minSize || 1,
-									max: maxSize || 3,
-								},
-							},
-							shape: {
-								type: "circle",
-							},
+							value: particleDensity,
 						},
-						detectRetina: true,
-					}}
-				/>
-			)}
+						opacity: {
+							value: 0.5,
+						},
+						shape: {
+							type: "circle",
+						},
+						size: {
+							value: { min: minSize, max: maxSize },
+						},
+					},
+					detectRetina: true,
+				}}
+			/>
 		</motion.div>
 	);
 };

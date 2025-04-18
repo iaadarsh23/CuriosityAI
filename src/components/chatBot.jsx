@@ -38,6 +38,10 @@ const ChatBot = () => {
 	const currentTime = getTime();
 	const [inputValue, setInputValue] = useState("");
 
+	const handleReturn = () => {
+		navigate("/", { replace: true });
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (!inputValue.trim()) return;
@@ -47,10 +51,10 @@ const ChatBot = () => {
 	};
 
 	return (
-		<div className="fixed inset-0 w-screen h-screen bg-black isolate">
+		<div className="fixed inset-0 w-screen h-screen bg-black isolate relative">
 			{/* Back Button */}
 			<Motion.button
-				onClick={() => navigate(-1)}
+				onClick={handleReturn}
 				initial={{ opacity: 0, x: 20 }}
 				animate={{ opacity: 1, x: 0 }}
 				whileHover={{ scale: 1.02 }}
@@ -67,7 +71,7 @@ const ChatBot = () => {
 				transition={{ duration: 0.8, delay: 0.3 }}
 				className="absolute top-6 left-8 z-[9999]"
 			>
-				<style jsx global>{`
+				<style>{`
 					@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap");
 
 					.premium-gradient {

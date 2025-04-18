@@ -29,13 +29,12 @@ const Contact = () => {
 				<SparklesCore
 					id="tsparticlesfullpage"
 					background="black"
-					minSize={1}
+					minSize={0.5}
 					maxSize={2}
-					particleDensity={200}
+					particleDensity={35}
 					className="w-full h-full"
 					particleColor="#FFFFFF"
 					speed={1}
-					particleCount={300}
 					animate={true}
 				/>
 			</div>

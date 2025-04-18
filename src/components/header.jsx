@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import {
 	Navbar,
 	NavBody,
@@ -13,8 +14,9 @@ import {
 	NavbarButton,
 } from "./ui/resizable-navbar";
 
-const Header = ({ isChatMode, onExitChat }) => {
+const Header = ({ isChatMode, onExitChat, onAuthClick, user }) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const { logout } = useAuth();
 
 	const navItems = [
 		{
@@ -55,20 +57,31 @@ const Header = ({ isChatMode, onExitChat }) => {
 
 	return (
 		<Navbar>
-			{/* Desktop Navigation */}
 			<NavBody>
 				<Link to="/">
 					<NavbarLogo />
 				</Link>
 				<NavItems items={navItems} />
-				<Link to="/login">
-					<NavbarButton className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
-						Login
+				{user ? (
+					<div className="flex items-center gap-4">
+						<span className="text-slate-300">{user.email}</span>
+						<NavbarButton
+							onClick={logout}
+							className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+						>
+							Sign Out
+						</NavbarButton>
+					</div>
+				) : (
+					<NavbarButton
+						onClick={onAuthClick}
+						className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+					>
+						Sign In
 					</NavbarButton>
-				</Link>
+				)}
 			</NavBody>
 
-			{/* Mobile Navigation */}
 			<MobileNav>
 				<MobileNavHeader>
 					<Link to="/">
@@ -88,15 +101,32 @@ const Header = ({ isChatMode, onExitChat }) => {
 							</NavbarButton>
 						</Link>
 					))}
-					<Link to="/login">
+					{user ? (
+						<div className="space-y-2">
+							<div className="text-slate-300 text-center">{user.email}</div>
+							<NavbarButton
+								variant="gradient"
+								className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+								onClick={() => {
+									logout();
+									setIsOpen(false);
+								}}
+							>
+								Sign Out
+							</NavbarButton>
+						</div>
+					) : (
 						<NavbarButton
 							variant="gradient"
 							className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-							onClick={() => setIsOpen(false)}
+							onClick={() => {
+								onAuthClick();
+								setIsOpen(false);
+							}}
 						>
-							Login
+							Sign In
 						</NavbarButton>
-					</Link>
+					)}
 				</MobileNavMenu>
 			</MobileNav>
 		</Navbar>

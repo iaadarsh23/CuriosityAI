@@ -1,74 +1,88 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import ChatBot from "./components/chatBot";
 import Header from "./components/header";
 import Home from "./components/home";
-import FeaturesSection from "./components/features";
-import About from "./components/about";
-import Contact from "./components/contact";
+import ChatBot from "./components/chatBot";
 import { ThemeProvider } from "./context/ThemeContext";
-import ChatInterface from "./components/ChatInterface";
+import { AuthProvider } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
+
+// Lazy load heavy components
+const FeaturesSection = lazy(() => import("./components/features"));
+const About = lazy(() => import("./components/about"));
+const Contact = lazy(() => import("./components/contact"));
+const ChatInterface = lazy(() => import("./components/ChatInterface"));
+const AuthModal = lazy(() => import("./components/auth/AuthModal"));
+
+// Loading component
+const LoadingSpinner = () => (
+	<div className="flex items-center justify-center min-h-screen">
+		<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+	</div>
+);
 
 function AppContent() {
 	const navigate = useNavigate();
 	const [isChatMode, setIsChatMode] = useState(false);
+	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+	const { user } = useAuth();
 
 	useEffect(() => {
-		// Update isChatMode based on current path
 		const path = window.location.pathname;
 		setIsChatMode(path === "/chat" || path === "/chat-interface");
-	}, []);
+	}, [window.location.pathname]);
 
 	const handleStartExploring = () => {
 		setIsChatMode(true);
-		navigate("/chat");
+		navigate("/chat", { replace: true });
 	};
 
 	const handleExitChat = () => {
 		setIsChatMode(false);
-		navigate("/");
+		navigate("/", { replace: true });
 	};
 
 	return (
 		<ThemeProvider>
 			<div className="min-h-screen bg-black">
 				{!isChatMode && (
-					<Header isChatMode={isChatMode} onExitChat={handleExitChat} />
+					<Header
+						isChatMode={isChatMode}
+						onExitChat={handleExitChat}
+						onAuthClick={() => setIsAuthModalOpen(true)}
+						user={user}
+					/>
 				)}
-				<main className={isChatMode ? "h-screen" : ""}>
+				<Suspense fallback={<LoadingSpinner />}>
 					<Routes>
 						<Route
 							path="/"
 							element={
-								<>
-									<Home openChatBot={handleStartExploring} />
-									<FeaturesSection />
-									<About />
-									<Contact />
-								</>
+								!isChatMode && (
+									<>
+										<Home openChatBot={handleStartExploring} />
+										<FeaturesSection />
+										<About />
+										<Contact />
+									</>
+								)
 							}
 						/>
-						<Route
-							path="/chat"
-							element={
-								<div className="h-screen">
-									<ChatBot onExit={handleExitChat} />
-								</div>
-							}
-						/>
+						<Route path="/chat" element={<ChatBot />} />
+						<Route path="/chat-interface" element={<ChatInterface />} />
 						<Route path="/features" element={<FeaturesSection />} />
 						<Route path="/about" element={<About />} />
 						<Route path="/contact" element={<Contact />} />
-						<Route
-							path="/chat-interface"
-							element={
-								<div className="h-screen">
-									<ChatInterface />
-								</div>
-							}
-						/>
 					</Routes>
-				</main>
+				</Suspense>
+				{isAuthModalOpen && (
+					<Suspense fallback={<LoadingSpinner />}>
+						<AuthModal
+							isOpen={isAuthModalOpen}
+							onClose={() => setIsAuthModalOpen(false)}
+						/>
+					</Suspense>
+				)}
 			</div>
 		</ThemeProvider>
 	);
@@ -76,9 +90,11 @@ function AppContent() {
 
 function App() {
 	return (
-		<BrowserRouter>
-			<AppContent />
-		</BrowserRouter>
+		<AuthProvider>
+			<BrowserRouter>
+				<AppContent />
+			</BrowserRouter>
+		</AuthProvider>
 	);
 }
 

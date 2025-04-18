@@ -268,20 +268,16 @@ const ChatInterface = () => {
 									className="flex justify-start"
 								>
 									<div className="max-w-[80%] rounded-2xl px-6 py-4 bg-gradient-to-r from-[#000000]/80 via-[#1a1a1a]/80 to-[#000000]/80 text-white/95 shadow-[0_8px_16px_rgba(0,0,0,0.5)] backdrop-blur-md border border-white/10">
-										<span className="inline-flex gap-1">
-											<span className="animate-bounce">.</span>
+										<span className="inline-flex gap-2">
+											<span className="w-2 h-2 rounded-full bg-white/80 animate-bounce"></span>
 											<span
-												className="animate-bounce"
+												className="w-2 h-2 rounded-full bg-white/80 animate-bounce"
 												style={{ animationDelay: "0.2s" }}
-											>
-												.
-											</span>
+											></span>
 											<span
-												className="animate-bounce"
+												className="w-2 h-2 rounded-full bg-white/80 animate-bounce"
 												style={{ animationDelay: "0.4s" }}
-											>
-												.
-											</span>
+											></span>
 										</span>
 									</div>
 								</Motion.div>

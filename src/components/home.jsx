@@ -11,11 +11,12 @@ const Home = ({ openChatBot }) => {
 			<SparklesCore
 				className="absolute inset-0 z-0"
 				background="transparent"
-				minSize={1}
-				maxSize={3}
-				speed={2}
+				minSize={1.5}
+				maxSize={4}
+				speed={1}
 				particleColor="#ffffff"
-				particleDensity={40}
+				particleCount={100}
+				particleDensity={100}
 			/>
 
 			{/* Moving the line with text flip + "Chat with Curiosity" here */}
