@@ -4,10 +4,6 @@ import React, { useRef, useEffect } from "react";
 import createGlobe from "cobe";
 import { motion as Motion, useInView } from "framer-motion";
 import { SparklesCore } from "./ui/sparkles";
-import Neural from "../assets/images/neural.jpg";
-import Math from "../assets/images/math.jpg";
-import Code from "../assets/images/code.jpg";
-import Gemini from "../assets/images/Google-Gemini-Pro.webp";
 
 export function FeaturesSectionDemo() {
 	const ref = useRef(null);
@@ -102,30 +98,45 @@ export function FeaturesSectionDemo() {
 	);
 }
 
+// Optimized image loading with lazy loading
 const SkeletonOne = () => {
+	const images = [
+		"/horse.png",
+		"/ghilbli-1.avif",
+		"/internet-has-a-field-day-with-chatgpt-generated-ghibli-images-sam-altman-joins-in.webp",
+	];
+
 	return (
-		<div className="relative group h-full">
-			<img
-				src={Neural}
-				alt="Neural Network"
-				loading="lazy"
-				className="w-full h-96 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-			/>
-			<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+		<div className="relative flex flex-col gap-4 h-full">
+			{images.map((image, idx) => (
+				<div key={idx} className="relative group h-48">
+					<img
+						src={image}
+						alt="AI generated image"
+						loading="lazy"
+						className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+					/>
+					<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+				</div>
+			))}
 		</div>
 	);
 };
 
 const SkeletonTwo = () => {
 	return (
-		<div className="relative group h-full">
-			<img
-				src={Math}
-				alt="Math Problem Solving"
-				loading="lazy"
-				className="w-full h-96 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-			/>
-			<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+		<div className="relative flex flex-col gap-4 h-full">
+			{["/math.jpg", "/code.jpg", "/neural.jpg"].map((src, idx) => (
+				<div key={idx} className="relative group h-48">
+					<img
+						src={src}
+						alt="Problem solving visualization"
+						loading="lazy"
+						className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+					/>
+					<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+				</div>
+			))}
 		</div>
 	);
 };
@@ -134,8 +145,8 @@ const SkeletonThree = () => {
 	return (
 		<div className="relative group h-full">
 			<img
-				src={Code}
-				alt="Code Generation"
+				src="/2.jpeg"
+				alt="High quality code generation"
 				loading="lazy"
 				className="w-full h-96 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
 			/>
@@ -145,15 +156,17 @@ const SkeletonThree = () => {
 };
 
 const SkeletonFour = () => {
+	const ref = useRef(null);
+	const isInView = useInView(ref, { once: true, margin: "-100px" });
+
 	return (
-		<div className="relative group h-full">
-			<img
-				src={Gemini}
-				alt="Google Gemini"
-				loading="lazy"
-				className="w-full h-96 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
-			/>
-			<div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+		<div
+			ref={ref}
+			className="h-60 md:h-80 flex flex-col items-center relative bg-transparent dark:bg-transparent mt-10"
+		>
+			{isInView && (
+				<Globe className="absolute -right-10 md:-right-10 -bottom-80 md:-bottom-72" />
+			)}
 		</div>
 	);
 };
