@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
 import { WavyBackground } from "./ui/wavy-background";
 import { generateContentFromGemini } from "../data/handleApi";
+import { Loader } from "./ui/loading-screen";
 
 const formatMessage = (text) => {
 	// Split into code blocks and regular text
@@ -110,17 +111,17 @@ const ChatInterface = () => {
 		scrollToBottom();
 	}, [messages]);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		if (!inputValue.trim()) return;
+	useEffect(() => {
+		// If there's an initial message, generate a response automatically
+		if (initialMessage && messages.length === 1) {
+			handleBotResponse(initialMessage);
+		}
+	}, []);
 
-		const userMessage = { text: inputValue, sender: "user" };
-		setMessages((prev) => [...prev, userMessage]);
-		setInputValue("");
+	const handleBotResponse = async (message) => {
 		setIsLoading(true);
-
 		try {
-			const response = await generateContentFromGemini(inputValue);
+			const response = await generateContentFromGemini(message);
 			const botMessage = { text: response, sender: "bot" };
 			setMessages((prev) => [...prev, botMessage]);
 		} catch (error) {
@@ -133,6 +134,17 @@ const ChatInterface = () => {
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (!inputValue.trim()) return;
+
+		const userMessage = { text: inputValue, sender: "user" };
+		setMessages((prev) => [...prev, userMessage]);
+		setInputValue("");
+
+		handleBotResponse(inputValue);
 	};
 
 	return (
@@ -248,10 +260,6 @@ const ChatInterface = () => {
 							className="flex-1 overflow-y-auto space-y-4 pr-4"
 							style={{
 								scrollbarWidth: "none",
-								"-ms-overflow-style": "none",
-								"&::-webkit-scrollbar": {
-									display: "none",
-								},
 							}}
 						>
 							{messages.map((message, index) => (
@@ -261,24 +269,20 @@ const ChatInterface = () => {
 									sender={message.sender}
 								/>
 							))}
+
 							{isLoading && (
 								<Motion.div
-									initial={{ opacity: 0, y: 10 }}
+									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
-									className="flex justify-start"
+									className="flex items-start mt-4 ml-2"
 								>
-									<div className="max-w-[80%] rounded-2xl px-6 py-4 bg-gradient-to-r from-[#000000]/80 via-[#1a1a1a]/80 to-[#000000]/80 text-white/95 shadow-[0_8px_16px_rgba(0,0,0,0.5)] backdrop-blur-md border border-white/10">
-										<span className="inline-flex gap-2">
-											<span className="w-2 h-2 rounded-full bg-white/80 animate-bounce"></span>
-											<span
-												className="w-2 h-2 rounded-full bg-white/80 animate-bounce"
-												style={{ animationDelay: "0.2s" }}
-											></span>
-											<span
-												className="w-2 h-2 rounded-full bg-white/80 animate-bounce"
-												style={{ animationDelay: "0.4s" }}
-											></span>
-										</span>
+									<div className="rounded-2xl px-6 py-5 bg-gradient-to-r from-[#000000]/80 via-[#1a1a1a]/80 to-[#000000]/80 shadow-[0_8px_16px_rgba(0,0,0,0.5)] backdrop-blur-md border border-white/10">
+										<div className="flex items-center">
+											<Loader color="blue-purple" />
+											<span className="ml-3 text-white/70 text-sm">
+												Thinking...
+											</span>
+										</div>
 									</div>
 								</Motion.div>
 							)}
@@ -287,25 +291,14 @@ const ChatInterface = () => {
 					</div>
 				</div>
 
-				{/* Input Container with premium glass effect */}
-				<div className="w-full max-w-4xl mx-auto px-4 mt-4 mb-6">
-					<div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-3 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-						<PlaceholdersAndVanishInput
-							placeholders={[
-								"Can you explain this React code and suggest improvements?",
-								"What's the key argument in this legal case?",
-								"How do I create an effective study plan for exams?",
-								"Help me debug this SQL query performance issue",
-								"Write a professional email to decline a client meeting",
-								"Explain this medical research paper in simple terms",
-								"How can I optimize my marketing strategy?",
-								"Help me structure my thesis proposal",
-							]}
-							value={inputValue}
-							onChange={(e) => setInputValue(e.target.value)}
-							onSubmit={handleSubmit}
-						/>
-					</div>
+				{/* Chat Input */}
+				<div className="w-full max-w-4xl mx-auto px-4 pb-6 pt-2">
+					<PlaceholdersAndVanishInput
+						value={inputValue}
+						onChange={(e) => setInputValue(e.target.value)}
+						onSubmit={handleSubmit}
+						isDisabled={isLoading}
+					/>
 				</div>
 			</div>
 		</WavyBackground>

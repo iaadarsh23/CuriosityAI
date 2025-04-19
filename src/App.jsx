@@ -7,6 +7,9 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { LoadingScreen } from "./components/ui/loading-screen";
+import LoadingAnimation from "./components/ui/LoadingAnimation";
+import { AnimatePresence } from "framer-motion";
 
 // Lazy load heavy components
 const FeaturesSection = lazy(() => import("./components/features"));
@@ -14,13 +17,6 @@ const About = lazy(() => import("./components/about"));
 const Contact = lazy(() => import("./components/contact"));
 const ChatInterface = lazy(() => import("./components/ChatInterface"));
 const AuthModal = lazy(() => import("./components/auth/AuthModal"));
-
-// Loading component
-const LoadingSpinner = () => (
-	<div className="flex items-center justify-center min-h-screen">
-		<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-	</div>
-);
 
 function AppContent() {
 	const navigate = useNavigate();
@@ -58,7 +54,8 @@ function AppContent() {
 						user={user}
 					/>
 				)}
-				<Suspense fallback={<LoadingSpinner />}>
+
+				<Suspense fallback={<LoadingAnimation />}>
 					<Routes>
 						<Route
 							path="/"
@@ -94,8 +91,9 @@ function AppContent() {
 						<Route path="/contact" element={<Contact />} />
 					</Routes>
 				</Suspense>
+
 				{isAuthModalOpen && (
-					<Suspense fallback={<LoadingSpinner />}>
+					<Suspense fallback={<LoadingAnimation />}>
 						<AuthModal
 							isOpen={isAuthModalOpen}
 							onClose={() => setIsAuthModalOpen(false)}

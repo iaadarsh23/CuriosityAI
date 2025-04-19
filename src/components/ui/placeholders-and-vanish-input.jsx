@@ -1,13 +1,15 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion as Motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function PlaceholdersAndVanishInput({
-	placeholders,
+	placeholders = [],
 	onChange,
 	onSubmit,
+	value = "",
+	isDisabled = false,
 }) {
 	const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -27,8 +29,10 @@ export function PlaceholdersAndVanishInput({
 	};
 
 	useEffect(() => {
-		startAnimation();
-		document.addEventListener("visibilitychange", handleVisibilityChange);
+		if (placeholders && placeholders.length > 0) {
+			startAnimation();
+			document.addEventListener("visibilitychange", handleVisibilityChange);
+		}
 
 		return () => {
 			if (intervalRef.current) {
@@ -41,8 +45,13 @@ export function PlaceholdersAndVanishInput({
 	const canvasRef = useRef(null);
 	const newDataRef = useRef([]);
 	const inputRef = useRef(null);
-	const [value, setValue] = useState("");
+	const [inputValue, setInputValue] = useState(value);
 	const [animating, setAnimating] = useState(false);
+
+	// Update internal value when prop value changes
+	useEffect(() => {
+		setInputValue(value);
+	}, [value]);
 
 	const draw = useCallback(() => {
 		if (!inputRef.current) return;
@@ -59,7 +68,7 @@ export function PlaceholdersAndVanishInput({
 		const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
 		ctx.font = `${fontSize * 2}px ${computedStyles.fontFamily}`;
 		ctx.fillStyle = "#000";
-		ctx.fillText(value, 16, 40);
+		ctx.fillText(inputValue, 16, 40);
 
 		const imageData = ctx.getImageData(0, 0, 800, 800);
 		const pixelData = imageData.data;
@@ -90,11 +99,11 @@ export function PlaceholdersAndVanishInput({
 			r: 2,
 			color: "rgba(0, 0, 0, 1)",
 		}));
-	}, [value]);
+	}, [inputValue]);
 
 	useEffect(() => {
 		draw();
-	}, [value, draw]);
+	}, [inputValue, draw]);
 
 	const animate = (start) => {
 		const animateFrame = (pos = 0) => {
@@ -133,7 +142,7 @@ export function PlaceholdersAndVanishInput({
 				if (newDataRef.current.length > 0) {
 					animateFrame(pos - 8);
 				} else {
-					setValue("");
+					setInputValue("");
 					setAnimating(false);
 				}
 			});
@@ -142,12 +151,14 @@ export function PlaceholdersAndVanishInput({
 	};
 
 	const handleKeyDown = (e) => {
-		if (e.key === "Enter" && !animating) {
+		if (e.key === "Enter" && !animating && !isDisabled) {
 			vanishAndSubmit();
 		}
 	};
 
 	const vanishAndSubmit = () => {
+		if (isDisabled) return;
+
 		setAnimating(true);
 		draw();
 
@@ -163,15 +174,25 @@ export function PlaceholdersAndVanishInput({
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		if (isDisabled) return;
+
 		vanishAndSubmit();
 		onSubmit && onSubmit(e);
+	};
+
+	const handleChange = (e) => {
+		if (!animating && !isDisabled) {
+			setInputValue(e.target.value);
+			onChange && onChange(e);
+		}
 	};
 
 	return (
 		<form
 			className={cn(
 				"w-full relative max-w-xl mx-auto bg-white h-12 rounded-full overflow-hidden shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200",
-				value && "bg-gray-50"
+				inputValue && "bg-gray-50",
+				isDisabled && "opacity-70 pointer-events-none"
 			)}
 			onSubmit={handleSubmit}
 		>
@@ -183,27 +204,24 @@ export function PlaceholdersAndVanishInput({
 				ref={canvasRef}
 			/>
 			<input
-				onChange={(e) => {
-					if (!animating) {
-						setValue(e.target.value);
-						onChange && onChange(e);
-					}
-				}}
+				onChange={handleChange}
 				onKeyDown={handleKeyDown}
 				ref={inputRef}
-				value={value}
+				value={inputValue}
 				type="text"
+				disabled={isDisabled}
 				className={cn(
 					"w-full relative text-sm sm:text-base z-50 border-none bg-transparent text-black h-full rounded-full focus:outline-none focus:ring-0 pl-4 sm:pl-10 pr-20",
-					animating && "text-transparent"
+					animating && "text-transparent",
+					isDisabled && "cursor-not-allowed"
 				)}
 			/>
 			<button
-				disabled={!value}
+				disabled={!inputValue || isDisabled}
 				type="submit"
 				className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-100 bg-black transition duration-200 flex items-center justify-center"
 			>
-				<motion.svg
+				<Motion.svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="24"
 					height="24"
@@ -216,14 +234,14 @@ export function PlaceholdersAndVanishInput({
 					className="text-white h-4 w-4"
 				>
 					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-					<motion.path
+					<Motion.path
 						d="M5 12l14 0"
 						initial={{
 							strokeDasharray: "50%",
 							strokeDashoffset: "50%",
 						}}
 						animate={{
-							strokeDashoffset: value ? 0 : "50%",
+							strokeDashoffset: inputValue ? 0 : "50%",
 						}}
 						transition={{
 							duration: 0.3,
@@ -232,12 +250,12 @@ export function PlaceholdersAndVanishInput({
 					/>
 					<path d="M13 18l6 -6" />
 					<path d="M13 6l6 6" />
-				</motion.svg>
+				</Motion.svg>
 			</button>
 			<div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
 				<AnimatePresence mode="wait">
-					{!value && (
-						<motion.p
+					{!inputValue && placeholders && placeholders.length > 0 && (
+						<Motion.p
 							initial={{
 								y: 5,
 								opacity: 0,
@@ -248,17 +266,13 @@ export function PlaceholdersAndVanishInput({
 								opacity: 1,
 							}}
 							exit={{
-								y: -15,
+								y: -5,
 								opacity: 0,
 							}}
-							transition={{
-								duration: 0.3,
-								ease: "linear",
-							}}
-							className="text-neutral-500 text-sm sm:text-base font-normal pl-4 sm:pl-12 text-left w-[calc(100%-2rem)] truncate"
+							className="pl-4 sm:pl-10 text-sm sm:text-base absolute left-0 text-gray-500"
 						>
 							{placeholders[currentPlaceholder]}
-						</motion.p>
+						</Motion.p>
 					)}
 				</AnimatePresence>
 			</div>

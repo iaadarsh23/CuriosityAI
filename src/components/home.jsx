@@ -11,11 +11,11 @@ const Home = ({ openChatBot }) => {
 			<SparklesCore
 				className="absolute inset-0 z-0"
 				background="transparent"
-				minSize={1.5}
-				maxSize={4}
+				minSize={2}
+				maxSize={5}
 				speed={1}
 				particleColor="#ffffff"
-				particleCount={100}
+				particleCount={1000}
 				particleDensity={100}
 			/>
 
