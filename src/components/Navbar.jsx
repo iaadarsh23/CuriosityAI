@@ -1,93 +1,123 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
+import {
+	Navbar,
+	NavBody,
+	NavItems,
+	NavbarLogo,
+	NavbarButton,
+} from "./ui/resizable-navbar";
 
-const Navbar = ({ user }) => {
+const NavbarComponent = ({ user }) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const dropdownRef = useRef(null);
 
 	const handleSignOut = async () => {
 		try {
 			await signOut(auth);
+			setIsDropdownOpen(false);
 		} catch (error) {
 			console.error("Error signing out:", error);
 		}
 	};
 
+	// Handle click outside to close dropdown
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+				setIsDropdownOpen(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
+	const navItems = [
+		{
+			name: "Home",
+			link: "/",
+		},
+		{
+			name: "About",
+			link: "/about",
+		},
+		{
+			name: "Features",
+			link: "/features",
+		},
+		{
+			name: "Contact",
+			link: "/contact",
+		},
+	];
+
 	return (
-		<nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-sm border-b border-white/10">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="flex items-center justify-between h-16">
-					<div className="flex items-center">
-						<Link to="/" className="text-white text-xl font-bold">
-							Curiosity AI
-						</Link>
-					</div>
-					<div className="flex items-center space-x-8">
-						<Link
-							to="/"
-							className="text-gray-300 hover:text-white transition-colors"
+		<Navbar>
+			<NavBody>
+				<Link to="/">
+					<NavbarLogo />
+				</Link>
+				<NavItems items={navItems} />
+				{user ? (
+					<div className="relative" ref={dropdownRef}>
+						<button
+							onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+							className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/20 hover:ring-white/40 transition-all duration-200 focus:outline-none"
 						>
-							Home
-						</Link>
-						<Link
-							to="/about"
-							className="text-gray-300 hover:text-white transition-colors"
-						>
-							About
-						</Link>
-						<Link
-							to="/features"
-							className="text-gray-300 hover:text-white transition-colors"
-						>
-							Features
-						</Link>
-						{user ? (
-							<div className="relative">
-								<button
-									onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-									className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-semibold hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-								>
+							{user.photoURL ? (
+								<img
+									src={user.photoURL}
+									alt="Profile"
+									className="w-full h-full object-cover"
+									referrerPolicy="no-referrer"
+								/>
+							) : (
+								<div className="w-full h-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white text-lg font-semibold">
 									{user.email.charAt(0).toUpperCase()}
-								</button>
-								<AnimatePresence>
-									{isDropdownOpen && (
-										<motion.div
-											initial={{ opacity: 0, y: -10 }}
-											animate={{ opacity: 1, y: 0 }}
-											exit={{ opacity: 0, y: -10 }}
-											transition={{ duration: 0.2 }}
-											className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+								</div>
+							)}
+						</button>
+						<AnimatePresence>
+							{isDropdownOpen && (
+								<motion.div
+									initial={{ opacity: 0, y: -10 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -10 }}
+									transition={{ duration: 0.2 }}
+									className="absolute right-0 mt-2 w-48 rounded-lg overflow-hidden bg-black/50 backdrop-blur-md border border-white/10"
+								>
+									<div className="py-1">
+										<div className="px-4 py-2 text-sm text-white border-b border-white/10">
+											{user.email}
+										</div>
+										<button
+											onClick={handleSignOut}
+											className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
 										>
-											<div className="py-1">
-												<div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-200">
-													{user.email}
-												</div>
-												<button
-													onClick={handleSignOut}
-													className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-												>
-													Sign Out
-												</button>
-											</div>
-										</motion.div>
-									)}
-								</AnimatePresence>
-							</div>
-						) : (
-							<Link
-								to="/login"
-								className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors"
-							>
-								Sign In
-							</Link>
-						)}
+											Sign Out
+										</button>
+									</div>
+								</motion.div>
+							)}
+						</AnimatePresence>
 					</div>
-				</div>
-			</div>
-		</nav>
+				) : (
+					<NavbarButton
+						onClick={() => (window.location.href = "/login")}
+						className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+					>
+						Sign In
+					</NavbarButton>
+				)}
+			</NavBody>
+		</Navbar>
 	);
 };
 
-export default Navbar;
+export default NavbarComponent;

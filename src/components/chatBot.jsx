@@ -58,7 +58,7 @@ const ChatBot = () => {
 				initial={{ opacity: 0, x: 20 }}
 				animate={{ opacity: 1, x: 0 }}
 				whileHover={{ scale: 1.02 }}
-				className="fixed top-6 right-6 z-[9999] flex items-center gap-2 text-white/90 hover:text-white transition-colors"
+				className="fixed top-4 sm:top-6 right-4 sm:right-6 z-[9999] flex items-center gap-2 text-white/90 hover:text-white transition-colors"
 			>
 				<span className="text-sm font-medium">Return</span>
 				<IoArrowBack className="w-4 h-4" />
@@ -69,7 +69,7 @@ const ChatBot = () => {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.8, delay: 0.3 }}
-				className="absolute top-6 left-8 z-[9999]"
+				className="absolute top-4 sm:top-6 left-4 sm:left-8 z-[9999]"
 			>
 				<style>{`
 					@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap");
@@ -136,7 +136,7 @@ const ChatBot = () => {
 				`}</style>
 				<div className="flex items-center gap-2">
 					<div
-						className="text-2xl premium-gradient text-transparent"
+						className="text-xl sm:text-2xl premium-gradient text-transparent"
 						style={{ fontFamily: "'Cinzel', serif", fontWeight: 600 }}
 					>
 						Curiosity
@@ -151,13 +151,13 @@ const ChatBot = () => {
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1, delay: 0.5 }}
-					className="flex flex-col items-center justify-center space-y-8 h-[35vh] mt-12"
+					className="flex flex-col items-center justify-center space-y-4 sm:space-y-8 h-[35vh] mt-12"
 				>
 					<Motion.h2
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 1, delay: 0.7, ease: "easeOut" }}
-						className="text-4xl md:text-6xl lg:text-7xl text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 font-sans font-bold tracking-tight"
+						className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 font-sans font-bold tracking-tight px-4"
 					>
 						Good {currentTime}, Adarsh
 					</Motion.h2>
@@ -165,7 +165,7 @@ const ChatBot = () => {
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						transition={{ duration: 1, delay: 1 }}
-						className="text-white/60 text-base md:text-lg text-center max-w-lg mx-auto"
+						className="text-white/60 text-sm sm:text-base md:text-lg text-center max-w-lg mx-auto px-4"
 					>
 						Your AI companion awaits to illuminate your queries with wisdom and
 						wit.

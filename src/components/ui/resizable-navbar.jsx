@@ -13,11 +13,9 @@ import Button from "../button";
 
 export const Navbar = ({ children, className }) => {
 	const ref = useRef(null);
-	const { scrollY } = useScroll({
-		target: ref,
-		offset: ["start start", "end start"],
-	});
 	const [visible, setVisible] = useState(false);
+
+	const { scrollY } = useScroll();
 
 	useMotionValueEvent(scrollY, "change", (latest) => {
 		if (latest > 100) {
@@ -30,7 +28,7 @@ export const Navbar = ({ children, className }) => {
 	return (
 		<motion.div
 			ref={ref}
-			className={cn("sticky inset-x-0 top-0 z-40 w-full", className)}
+			className={cn("fixed inset-x-0 top-0 z-50 w-full", className)}
 		>
 			{React.Children.map(children, (child) =>
 				React.isValidElement(child)
@@ -59,7 +57,7 @@ export const NavBody = ({ children, className, visible }) => {
 			}}
 			style={{ minWidth: "800px" }}
 			className={cn(
-				"relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-black/40 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] border border-solid border-white/10 px-4 py-2 lg:flex",
+				"relative z-[60] mx-auto w-full max-w-7xl flex-row items-center justify-between self-start rounded-full bg-black/40 backdrop-blur-md shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] border border-solid border-white/10 px-4 py-2 flex",
 				visible && "bg-black/60",
 				className
 			)}

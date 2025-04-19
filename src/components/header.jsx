@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -16,7 +16,32 @@ import {
 
 const Header = ({ isChatMode, onExitChat, onAuthClick, user }) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const { logout } = useAuth();
+	const dropdownRef = useRef(null);
+
+	// Handle click outside to close dropdown
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+				setIsDropdownOpen(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
+	const handleSignOut = async () => {
+		try {
+			await logout();
+			setIsDropdownOpen(false);
+		} catch (error) {
+			console.error("Error signing out:", error);
+		}
+	};
 
 	const navItems = [
 		{
@@ -63,14 +88,36 @@ const Header = ({ isChatMode, onExitChat, onAuthClick, user }) => {
 				</Link>
 				<NavItems items={navItems} />
 				{user ? (
-					<div className="flex items-center gap-4">
-						<span className="text-slate-300">{user.email}</span>
-						<NavbarButton
-							onClick={logout}
-							className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+					<div className="relative" ref={dropdownRef}>
+						<button
+							onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+							className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/20 hover:ring-white/40 transition-all duration-200 focus:outline-none"
 						>
-							Sign Out
-						</NavbarButton>
+							{user.photoURL ? (
+								<img
+									src={user.photoURL}
+									alt="Profile"
+									className="w-full h-full object-cover"
+									referrerPolicy="no-referrer"
+								/>
+							) : (
+								<div className="w-full h-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white text-lg font-semibold">
+									{user.email.charAt(0).toUpperCase()}
+								</div>
+							)}
+						</button>
+						{isDropdownOpen && (
+							<div className="absolute right-0 mt-2 w-48 rounded-lg overflow-hidden bg-black/50 backdrop-blur-md border border-white/10 shadow-lg">
+								<div className="py-1">
+									<button
+										onClick={handleSignOut}
+										className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+									>
+										Sign Out
+									</button>
+								</div>
+							</div>
+						)}
 					</div>
 				) : (
 					<NavbarButton
@@ -102,18 +149,27 @@ const Header = ({ isChatMode, onExitChat, onAuthClick, user }) => {
 						</Link>
 					))}
 					{user ? (
-						<div className="space-y-2">
-							<div className="text-slate-300 text-center">{user.email}</div>
-							<NavbarButton
-								variant="gradient"
-								className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+						<div className="flex items-center justify-center py-2">
+							<button
 								onClick={() => {
-									logout();
+									handleSignOut();
 									setIsOpen(false);
 								}}
+								className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/20 hover:ring-white/40 transition-all duration-200 focus:outline-none"
 							>
-								Sign Out
-							</NavbarButton>
+								{user.photoURL ? (
+									<img
+										src={user.photoURL}
+										alt="Profile"
+										className="w-full h-full object-cover"
+										referrerPolicy="no-referrer"
+									/>
+								) : (
+									<div className="w-full h-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white text-lg font-semibold">
+										{user.email.charAt(0).toUpperCase()}
+									</div>
+								)}
+							</button>
 						</div>
 					) : (
 						<NavbarButton

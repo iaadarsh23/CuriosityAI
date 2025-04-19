@@ -6,6 +6,7 @@ import ChatBot from "./components/chatBot";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Lazy load heavy components
 const FeaturesSection = lazy(() => import("./components/features"));
@@ -33,6 +34,10 @@ function AppContent() {
 	}, [window.location.pathname]);
 
 	const handleStartExploring = () => {
+		if (!user) {
+			setIsAuthModalOpen(true);
+			return;
+		}
 		setIsChatMode(true);
 		navigate("/chat", { replace: true });
 	};
@@ -68,8 +73,22 @@ function AppContent() {
 								)
 							}
 						/>
-						<Route path="/chat" element={<ChatBot />} />
-						<Route path="/chat-interface" element={<ChatInterface />} />
+						<Route
+							path="/chat"
+							element={
+								<ProtectedRoute>
+									<ChatBot />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/chat-interface"
+							element={
+								<ProtectedRoute>
+									<ChatInterface />
+								</ProtectedRoute>
+							}
+						/>
 						<Route path="/features" element={<FeaturesSection />} />
 						<Route path="/about" element={<About />} />
 						<Route path="/contact" element={<Contact />} />
